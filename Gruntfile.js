@@ -46,7 +46,7 @@ module.exports = function (grunt) {
       },
       jsTest: {
         files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'newer:jscs:test', 'karma']
+        tasks: ['newer:jshint:test', 'newer:jscs:test'] //, 'karma']
       },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
@@ -220,7 +220,7 @@ module.exports = function (grunt) {
             }
           }
       }
-    }, 
+    },
 
     // Renames files for browser caching purposes
     filerev: {
@@ -417,6 +417,7 @@ module.exports = function (grunt) {
       ]
     },
 
+
     // Test settings
     karma: {
       unit: {
@@ -452,8 +453,8 @@ module.exports = function (grunt) {
     'wiredep',
     'concurrent:test',
     'postcss',
-    'connect:test',
-    'karma'
+    'connect:test'
+    //'karma'
   ]);
 
   grunt.registerTask('build', [
