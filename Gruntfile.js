@@ -48,6 +48,13 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'newer:jscs:test'] //, 'karma']
       },
+      less: {
+        files: ['app/less/**/*.less'],
+          tasks: ['less', 'watch:styles'],
+          options: {
+            nospawn: true
+          }
+      },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'postcss']
@@ -67,6 +74,18 @@ module.exports = function (grunt) {
       }
     },
 
+    // Compile less to css
+    less: {
+      development: {
+        options: {
+          compress: true,
+          optimization: 2
+        },
+        files: {
+          '<%= yeoman.app %>/styles/style.css': '<%= yeoman.app %>/less/style.less'
+        }
+      }
+    },
     // The actual grunt server settings
     connect: {
       options: {
@@ -117,7 +136,6 @@ module.exports = function (grunt) {
         }
       }
     },
-
     // Make sure there are no obvious mistakes
     jshint: {
       options: {
@@ -451,6 +469,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'clean:server',
     'wiredep',
+    'less',
     'concurrent:test',
     'postcss',
     'connect:test'
@@ -461,6 +480,7 @@ module.exports = function (grunt) {
     'clean:dist',
     'wiredep',
     'useminPrepare',
+    'less',
     'concurrent:dist',
     'postcss',
     'ngtemplates',
