@@ -41,7 +41,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all', 'newer:jscs:all'],
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          livereload: '<%= browserSync.livereload.options %>'
         }
       },
       jsTest: {
@@ -63,14 +63,58 @@ module.exports = function (grunt) {
         files: ['Gruntfile.js']
       },
       livereload: {
-        options: {
-          livereload: '<%= connect.options.livereload %>'
-        },
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
+      }
+    },
+
+    browserSync: {
+       livereload: {
+         bsFiles: {
+           src: [
+             '<%= yeoman.app %>/**/*.html',
+             '.tmp/styles/**/*.css',
+             '<%= yeoman.app %>/scripts/**/*.js',
+             '<%= yeoman.app %>/images/**/*.+(png/jpg/jpeg/gif/webp/svg)'
+           ]
+         },
+         options: {
+           watchTask: true,
+           server: {
+             baseDir: [appConfig.app, '.tmp'],
+             routes: {
+               '/bower_components': 'bower_components'
+             }
+           }
+         }
+      },
+      dist: {
+        bsFiles: {
+          src: '<%= yeoman.dist %>/**/*.html'
+        },
+        options: {
+          server: {
+            baseDir: appConfig.dist
+          }
+        }
+      },
+      test: {
+        bsFiles: {
+          src: 'test/spec/**/*.js'
+        },
+        watchTask: true,
+        port: 9001,
+        open: false,
+        logLevel: 'silent',
+        server: {
+          baseDir: ['test', '.tmp', appConfig.app],
+          routes: {
+            '/bower_components': 'bower_components'
+          }
+        }
       }
     },
 
@@ -86,56 +130,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    // The actual grunt server settings
-    connect: {
-      options: {
-        port: 9000,
-        // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
-        livereload: 35729
-      },
-      livereload: {
-        options: {
-          open: true,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect().use(
-                '/app/styles',
-                connect.static('./app/styles')
-              ),
-              connect.static(appConfig.app)
-            ];
-          }
-        }
-      },
-      test: {
-        options: {
-          port: 9001,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect.static('test'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect.static(appConfig.app)
-            ];
-          }
-        }
-      },
-      dist: {
-        options: {
-          open: true,
-          base: '<%= yeoman.dist %>'
-        }
-      }
-    },
+
     // Make sure there are no obvious mistakes
     jshint: {
       options: {
@@ -456,7 +451,7 @@ module.exports = function (grunt) {
       'wiredep',
       'concurrent:server',
       'postcss:server',
-      'connect:livereload',
+      'browserSync:livereload',
       'watch'
     ]);
   });
@@ -472,7 +467,7 @@ module.exports = function (grunt) {
     'less',
     'concurrent:test',
     'postcss',
-    'connect:test'
+    'browserSync:test',
     //'karma'
   ]);
 
