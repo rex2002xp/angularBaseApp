@@ -14,22 +14,21 @@ angular
     'ngCookies',
     'ngResource',
     'ui.router',
+    'ui.bootstrap',
     'ngSanitize',
     'ngTouch'
   ])
   .config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/main');
 
-    $stateProvider
-    .state('main', {
-      url: '/',
-      templateUrl: 'views/main.html',
-      controller: 'MainCtrl',
-      controllerAs: 'main'
-    }).state('about', {
-      url: '/',
-      templateUrl: 'views/about.html',
-      controller: 'AboutCtrl',
-      controllerAs: 'about'
+    $stateProvider.state('base', {
+      abstract: true,
+      templateUrl: 'views/common/content.html'
+    }).state('base.main', {
+      url: '/main',
+      templateUrl: 'views/empty_page.html',
+      data: {
+        pageTitle: 'Main'
+      }
     });
   });
